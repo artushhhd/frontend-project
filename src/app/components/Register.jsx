@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import api from '@/utils/api';
 
 export default function RegisterForm() {
@@ -12,28 +13,30 @@ export default function RegisterForm() {
     password: '',
     password_confirmation: ''
   });
-  const [errors, setErrors]=useState({});
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
-const handleChange = (e) => {
+  const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
+    setIsLoading(true);
 
     try {
       const res = await api.post('/register', formData); 
-
       alert(res.data.message || 'Registration successful! ✅');
       router.push('/login');
-
     } catch (err) {
       if (err.response?.status === 422) {
         setErrors(err.response.data.errors);
       } else {
         alert('Something went wrong! ❌');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -41,16 +44,20 @@ const handleChange = (e) => {
     <div style={{ maxWidth: '400px', margin: '50px auto' }}>
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
+        
+        {/* Name Field */}
         <div>
           <input
             name="name"
             placeholder="Name"
             value={formData.name}
             onChange={handleChange}
+            disabled={isLoading}
           />
           {errors.name && <p style={{ color: 'red' }}>{errors.name[0]}</p>}
         </div>
 
+        {/* Email Field */}
         <div>
           <input
             type="email"
@@ -58,10 +65,12 @@ const handleChange = (e) => {
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
+            disabled={isLoading}
           />
           {errors.email && <p style={{ color: 'red' }}>{errors.email[0]}</p>}
         </div>
 
+        {/* Password Field */}
         <div>
           <input
             type="password"
@@ -69,10 +78,12 @@ const handleChange = (e) => {
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
+            disabled={isLoading}
           />
           {errors.password && <p style={{ color: 'red' }}>{errors.password[0]}</p>}
         </div>
 
+        {/* Confirm Password Field */}
         <div>
           <input
             type="password"
@@ -80,12 +91,22 @@ const handleChange = (e) => {
             placeholder="Confirm Password"
             value={formData.password_confirmation}
             onChange={handleChange}
+            disabled={isLoading}
           />
         </div>
 
-        <button type="submit">Register</button>
+        {/* Submit Button */}
+        <button type="submit" disabled={isLoading} style={{ marginTop: '10px' }}>
+          {isLoading ? 'Registering...' : 'Register'}
+        </button>
+        
         <br />
-        <a href="/login" style={{ display: 'inline-block', marginTop: '10px' }}>Login</a>
+        
+        {/* Login Link */}
+        <Link href="/login" style={{ display: 'inline-block', marginTop: '15px' }}>
+          Login
+        </Link>
+        
       </form>
     </div>
   );

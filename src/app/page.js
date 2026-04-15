@@ -1,15 +1,18 @@
-'use client';
 
-import { useState } from 'react';
-import Login from './components/login';
-import Register from './components/Register';
-import Profile from './components/profile';
+import RegisterForm from './components/Register';
 
-export default function Home() {
+export const metadata = {
+  title: 'Գրանցում | Իմ Կայքը',
+  description: 'Ստեղծեք նոր հաշիվ մեր հարթակում',
+};
 
+export default function RegisterPage() {
   return (
-    <>
-    <Register />
-    </>
+    <main style={{ padding: '20px' }}>
+      <h1>Բարի գալուստ</h1>
+      <p>Խնդրում ենք լրացնել տվյալները գրանցվելու համար:</p>
+      
+      <RegisterForm />
+    </main>
   );
 }

@@ -4,6 +4,14 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import api from '@/utils/api';
 
+// 1. Используем строковые константы, чтобы код был читаемым
+const ROLES = {
+  USER: 'user',
+  MODERATOR: 'moderator',
+  ADMIN: 'admin',
+  SUPERADMIN: 'superadmin',
+};
+
 export default function ClientLayoutHelper({ children }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -22,7 +30,9 @@ export default function ClientLayoutHelper({ children }) {
 
     api.get('/profile')
       .then(res => {
-        setAuth({ mounted: true, loggedIn: true, role: Number(res.data.role) });
+        const userRole = res.data.role; 
+        setAuth({ mounted: true, loggedIn: true, role: userRole });
+        
         if (isPublic) router.push('/shop');
       })
       .catch(() => {
@@ -34,6 +44,8 @@ export default function ClientLayoutHelper({ children }) {
 
   if (!auth.mounted) return null;
 
+  const isStaff = [ROLES.MODERATOR, ROLES.ADMIN, ROLES.SUPERADMIN].includes(auth.role);
+
   return (
     <div className="layout">
       {auth.loggedIn && !isPublic && (
@@ -42,9 +54,12 @@ export default function ClientLayoutHelper({ children }) {
           <nav className="nav">
             <button onClick={() => router.push('/shop')}>Shop</button>
             <button onClick={() => router.push('/profile')}>Account</button>
-            <button onClick={() => router.push('/addProducts')}>New Product</button>
+
+            {isStaff && (
+              <button onClick={() => router.push('/addProducts')}>New Product</button>
+            )}
             
-            {auth.role >= 1 && (
+            {isStaff && (
               <button className="admin-btn" onClick={() => router.push('/admin')}>Settings</button>
             )}
           </nav>

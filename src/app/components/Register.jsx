@@ -44,8 +44,6 @@ export default function RegisterForm() {
     <div style={{ maxWidth: '400px', margin: '50px auto' }}>
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
-        
-        {/* Name Field */}
         <div>
           <input
             name="name"
@@ -56,8 +54,6 @@ export default function RegisterForm() {
           />
           {errors.name && <p style={{ color: 'red' }}>{errors.name[0]}</p>}
         </div>
-
-        {/* Email Field */}
         <div>
           <input
             type="email"
@@ -69,8 +65,6 @@ export default function RegisterForm() {
           />
           {errors.email && <p style={{ color: 'red' }}>{errors.email[0]}</p>}
         </div>
-
-        {/* Password Field */}
         <div>
           <input
             type="password"
@@ -83,7 +77,6 @@ export default function RegisterForm() {
           {errors.password && <p style={{ color: 'red' }}>{errors.password[0]}</p>}
         </div>
 
-        {/* Confirm Password Field */}
         <div>
           <input
             type="password"
@@ -95,14 +88,12 @@ export default function RegisterForm() {
           />
         </div>
 
-        {/* Submit Button */}
         <button type="submit" disabled={isLoading} style={{ marginTop: '10px' }}>
           {isLoading ? 'Registering...' : 'Register'}
         </button>
         
         <br />
         
-        {/* Login Link */}
         <Link href="/login" style={{ display: 'inline-block', marginTop: '15px' }}>
           Login
         </Link>
